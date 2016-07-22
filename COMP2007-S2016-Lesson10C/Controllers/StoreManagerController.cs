@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -16,20 +15,20 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         private MusicStoreContext db = new MusicStoreContext();
 
         // GET: StoreManager
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             var albums = db.Albums.Include(a => a.Artist).Include(a => a.Genre);
-            return View(await albums.ToListAsync());
+            return View(albums.ToList());
         }
 
         // GET: StoreManager/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = await db.Albums.FindAsync(id);
+            Album album = db.Albums.Find(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -46,14 +45,16 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         }
 
         // POST: StoreManager/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Album album)
+        public ActionResult Create([Bind(Include = "AlbumId,GenreId,ArtistId,Title,Price,AlbumArtUrl")] Album album)
         {
             if (ModelState.IsValid)
             {
                 db.Albums.Add(album);
-                await db.SaveChangesAsync();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -63,13 +64,13 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         }
 
         // GET: StoreManager/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = await db.Albums.FindAsync(id);
+            Album album = db.Albums.Find(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -80,14 +81,16 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         }
 
         // POST: StoreManager/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Album album)
+        public ActionResult Edit([Bind(Include = "AlbumId,GenreId,ArtistId,Title,Price,AlbumArtUrl")] Album album)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(album).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.ArtistId = new SelectList(db.Artists, "ArtistId", "Name", album.ArtistId);
@@ -96,13 +99,13 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         }
 
         // GET: StoreManager/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = await db.Albums.FindAsync(id);
+            Album album = db.Albums.Find(id);
             if (album == null)
             {
                 return HttpNotFound();
@@ -113,11 +116,11 @@ namespace COMP2007_S2016_Lesson10C.Controllers
         // POST: StoreManager/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Album album = await db.Albums.FindAsync(id);
+            Album album = db.Albums.Find(id);
             db.Albums.Remove(album);
-            await db.SaveChangesAsync();
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

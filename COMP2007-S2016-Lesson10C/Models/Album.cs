@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace COMP2007_S2016_Lesson10C.Models
 {
-    [Bind(Exclude = "AlbumId")]
     public class Album
     {
         /// <summary>
@@ -27,16 +26,15 @@ namespace COMP2007_S2016_Lesson10C.Models
         {
             this.Title = Title;
         }
-
-        [ScaffoldColumn(false)]
+        [Display(Name ="Album")]
         public virtual int AlbumId { get; set; }
-        [DisplayName("Genre")]
+        [Display(Name ="Genre")]
         public virtual int GenreId { get; set; }
-        [DisplayName("Artist")]
+        [Display(Name ="Artist")]
         public virtual int ArtistId { get; set; }
         public virtual string Title { get; set; }
         public virtual decimal Price { get; set; }
-        [DisplayName("Album Art URL")]
+        [Display(Name ="Album Art URL")]
         public virtual string AlbumArtUrl { get; set; }
         public virtual Genre Genre { get; set; }
         public virtual Artist Artist { get; set; }
